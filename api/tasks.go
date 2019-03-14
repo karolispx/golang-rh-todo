@@ -13,7 +13,7 @@ import (
 
 // GetTasks - get user tasks.
 func GetTasks(w http.ResponseWriter, r *http.Request) {
-	// Authenticate user to make sure user a valid user is attempting to view tasks.
+	// Authenticate user to make sure user a valid user.
 	userID := helpers.ValidateJWT(w, r)
 
 	// If user is authenticated, get user tasks.
@@ -91,7 +91,7 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 
 // CreateTask - create user task.
 func CreateTask(w http.ResponseWriter, r *http.Request) {
-	// Authenticate user to make sure user a valid user is attempting to view tasks.
+	// Authenticate user to make sure user a valid user.
 	userID := helpers.ValidateJWT(w, r)
 
 	// If user is authenticated, allow creating a task.
@@ -124,17 +124,18 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Return success with taskID
-		helpers.RestAPIRespond(w, r, lastInsertID, "success", 200)
+		helpers.RestAPIRespond(w, r, lastInsertID, "success", 201)
+
+		return
 	}
 }
 
 // UpdateTask - update user task.
 func UpdateTask(w http.ResponseWriter, r *http.Request) {
-	// Authenticate user to make sure user a valid user is attempting to view tasks.
+	// Authenticate user to make sure user a valid user.
 	userID := helpers.ValidateJWT(w, r)
 
-	// If user is authenticated, allow creating a task.
+	// If user is authenticated, allow updating a task.
 	if userID > 0 {
 		vars := mux.Vars(r)
 		taskid := vars["taskid"]
@@ -182,7 +183,51 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Return success with taskID
 		helpers.RestAPIRespond(w, r, "Task has been updated successfully!", "success", 200)
+
+		return
+	}
+}
+
+// DeleteTask - delete user task.
+func DeleteTask(w http.ResponseWriter, r *http.Request) {
+	// Authenticate user to make sure user a valid user.
+	userID := helpers.ValidateJWT(w, r)
+
+	// If user is authenticated, allow deleting a task.
+	if userID > 0 {
+		vars := mux.Vars(r)
+		taskid := vars["taskid"]
+
+		if taskid == "" {
+			helpers.RestAPIRespond(w, r, "Please provide task ID.", "error", 422)
+
+			return
+		}
+
+		DB := helpers.InitDB()
+
+		// Check if this task belongs to the user
+		checkTaskBelongsToUser := models.CheckTaskBelongsToUser(DB, taskid, userID)
+
+		if checkTaskBelongsToUser < 1 {
+			helpers.RestAPIRespond(w, r, "This task does not belong to you!", "error", 422)
+
+			return
+		}
+
+		deleteTask := models.DeleteUserTask(DB, taskid, userID)
+
+		defer DB.Close()
+
+		if deleteTask == false {
+			helpers.DefaultErrorRestAPIRespond(w, r)
+
+			return
+		}
+
+		helpers.RestAPIRespond(w, r, "Task has been deleted successfully!", "success", 204)
+
+		return
 	}
 }

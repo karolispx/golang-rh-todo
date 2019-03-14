@@ -74,7 +74,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	generateJWT := helpers.GenerateJWT(lastInsertID)
 
 	if generateJWT != "" {
-		helpers.RestAPIRespond(w, r, generateJWT, "success", 200)
+		helpers.RestAPIRespond(w, r, generateJWT, "success", 201)
 
 		return
 	}

@@ -108,3 +108,14 @@ func UpdateUserTask(DB *sql.DB, taskid string, userID int, task string) int {
 
 	return lastUpdatedID
 }
+
+// DeleteUserTask - delete user task.
+func DeleteUserTask(DB *sql.DB, taskid string, userID int) bool {
+	_, err := DB.Exec("DELETE FROM tasks where taskid = $1", taskid)
+
+	if err != nil {
+		return false
+	}
+
+	return true
+}
