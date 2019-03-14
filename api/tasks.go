@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/gorilla/mux"
 	"github.com/karolispx/golang-rh-todo/helpers"
 	"github.com/karolispx/golang-rh-todo/models"
 )
@@ -88,7 +89,7 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// CreateTask = create user task.
+// CreateTask - create user task.
 func CreateTask(w http.ResponseWriter, r *http.Request) {
 	// Authenticate user to make sure user a valid user is attempting to view tasks.
 	userID := helpers.ValidateJWT(w, r)
@@ -125,5 +126,63 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 
 		// Return success with taskID
 		helpers.RestAPIRespond(w, r, lastInsertID, "success", 200)
+	}
+}
+
+// UpdateTask - update user task.
+func UpdateTask(w http.ResponseWriter, r *http.Request) {
+	// Authenticate user to make sure user a valid user is attempting to view tasks.
+	userID := helpers.ValidateJWT(w, r)
+
+	// If user is authenticated, allow creating a task.
+	if userID > 0 {
+		vars := mux.Vars(r)
+		taskid := vars["taskid"]
+
+		if taskid == "" {
+			helpers.RestAPIRespond(w, r, "Please provide task ID.", "error", 422)
+
+			return
+		}
+
+		task := &models.TaskDetails{}
+
+		err := json.NewDecoder(r.Body).Decode(task)
+
+		if err != nil {
+			helpers.RestAPIRespond(w, r, "Please provide a task.", "error", 422)
+
+			return
+		}
+
+		if task.Task == "" {
+			helpers.RestAPIRespond(w, r, "Please provide a task.", "error", 422)
+
+			return
+		}
+
+		DB := helpers.InitDB()
+
+		// Check if this task belongs to the user
+		checkTaskBelongsToUser := models.CheckTaskBelongsToUser(DB, taskid, userID)
+
+		if checkTaskBelongsToUser < 1 {
+			helpers.RestAPIRespond(w, r, "This task does not belong to you!", "error", 422)
+
+			return
+		}
+
+		updateTask := models.UpdateUserTask(DB, taskid, userID, task.Task)
+
+		defer DB.Close()
+
+		if updateTask < 1 {
+			helpers.DefaultErrorRestAPIRespond(w, r)
+
+			return
+		}
+
+		// Return success with taskID
+		helpers.RestAPIRespond(w, r, "Task has been updated successfully!", "success", 200)
 	}
 }

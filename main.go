@@ -30,9 +30,9 @@ func initRoutes() {
 	router.HandleFunc(Config.RestAPIPath+"/auth/login", api.Login).Methods("POST")
 
 	// User tasks. Require authentication.
-	router.HandleFunc(Config.RestAPIPath+"/tasks", api.GetTasks).Methods("GET")    // Get tasks
-	router.HandleFunc(Config.RestAPIPath+"/tasks", api.CreateTask).Methods("POST") // Create Task
-	// router.HandleFunc(Config.RestAPIPath+"/tasks/{taskid}", api.UpdateTask).Methods("PUT")    // Update task
+	router.HandleFunc(Config.RestAPIPath+"/tasks", api.GetTasks).Methods("GET")            // Get tasks
+	router.HandleFunc(Config.RestAPIPath+"/tasks", api.CreateTask).Methods("POST")         // Create Task
+	router.HandleFunc(Config.RestAPIPath+"/tasks/{taskid}", api.UpdateTask).Methods("PUT") // Update task
 	// router.HandleFunc(Config.RestAPIPath+"/tasks/{taskid}", api.DeleteTask).Methods("DELETE") // Delete task
 
 	// Print out the URL of the API

@@ -23,7 +23,7 @@ type TasksQueryParameters struct {
 	Order   string
 }
 
-// GetUserTasks - get user tasks
+// GetUserTasks - get user tasks.
 func GetUserTasks(userID int, DB *sql.DB, tasksQueryParameters TasksQueryParameters) []TaskDetails {
 	// Get user tasks based on filters provided
 	rows, err := DB.Query(
@@ -39,7 +39,7 @@ func GetUserTasks(userID int, DB *sql.DB, tasksQueryParameters TasksQueryParamet
 
 	var tasks []TaskDetails
 
-	// Foreach coin
+	// Foreach task
 	for rows.Next() {
 		var TaskID int
 		var UserID int
@@ -64,7 +64,7 @@ func GetUserTasks(userID int, DB *sql.DB, tasksQueryParameters TasksQueryParamet
 	return tasks
 }
 
-// CreateUserTask - create user task
+// CreateUserTask - create user task.
 func CreateUserTask(userID int, DB *sql.DB, task string) int {
 	var lastInsertID int
 
@@ -78,4 +78,33 @@ func CreateUserTask(userID int, DB *sql.DB, task string) int {
 	}
 
 	return lastInsertID
+}
+
+// CheckTaskBelongsToUser - check if this task belongs to the user.
+func CheckTaskBelongsToUser(DB *sql.DB, taskid string, userID int) int {
+	count := 0
+
+	row := DB.QueryRow("SELECT COUNT(*) FROM tasks where taskid = $1 AND userid = $2", taskid, userID)
+
+	err := row.Scan(&count)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return count
+}
+
+// UpdateUserTask - update user task.
+func UpdateUserTask(DB *sql.DB, taskid string, userID int, task string) int {
+	lastUpdatedID := 0
+
+	err := DB.QueryRow("UPDATE tasks SET task = $1, date_updated = $2 WHERE taskid = $3 AND userid = $4 returning taskid;",
+		task, helpers.GetCurrentDateTime(), taskid, userID).Scan(&lastUpdatedID)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return lastUpdatedID
 }
