@@ -25,8 +25,8 @@ func initRoutes() {
 	// Set up router routes
 	router := mux.NewRouter().StrictSlash(true)
 
-	// Test route to ensure router is set up correctly
-	router.HandleFunc(Config.RestAPIPath+"/test", api.TestRoute).Methods("GET")
+	// User authentication routes
+	router.HandleFunc(Config.RestAPIPath+"/auth/register", api.Register).Methods("POST")
 
 	// Print out the URL of the API
 	fmt.Println("Server is running on: " + Config.RestAPIURL + ":" + Config.Port)
