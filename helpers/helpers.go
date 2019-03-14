@@ -14,6 +14,7 @@ import (
 // RestAPIResponse message
 type RestAPIResponse struct {
 	Type     string      `json:"type"`
+	Status   int         `json:"status"`
 	Response interface{} `json:"response"`
 }
 
@@ -21,13 +22,6 @@ type RestAPIResponse struct {
 type Token struct {
 	UserID int
 	jwt.StandardClaims
-}
-
-// GetCurrentDateTime in string format
-func GetCurrentDateTime() string {
-	currentTime := time.Now()
-
-	return currentTime.Format("2006.01.02 15:04:05")
 }
 
 // RestAPIRespond - process rest api response
@@ -38,6 +32,7 @@ func RestAPIRespond(w http.ResponseWriter, r *http.Request, response interface{}
 
 	returnResponse := RestAPIResponse{
 		Type:     responseType,
+		Status:   statusCode,
 		Response: response,
 	}
 
@@ -49,6 +44,13 @@ func DefaultErrorRestAPIRespond(w http.ResponseWriter, r *http.Request) {
 	response := "An error occured. Please try again later."
 
 	RestAPIRespond(w, r, response, "error", 500)
+}
+
+// GetCurrentDateTime in string format
+func GetCurrentDateTime() string {
+	currentTime := time.Now()
+
+	return currentTime.Format("2006.01.02 15:04:05")
 }
 
 // GenerateJWT - generating JWT
