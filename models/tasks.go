@@ -18,14 +18,19 @@ type TaskDetails struct {
 type TasksQueryParameters struct {
 	Limit   int
 	Offset  int
-	Sort    string
-	Keyword string
+	OrderBy string
+	Order   string
 }
 
 // GetUserTasks - get user tasks
 func GetUserTasks(userID int, DB *sql.DB, tasksQueryParameters TasksQueryParameters) []TaskDetails {
-	// Get tasks for this user
-	rows, err := DB.Query("SELECT * FROM tasks WHERE userid = $1", userID)
+	// Get user tasks based on filters provided
+	rows, err := DB.Query(
+		"SELECT * FROM tasks WHERE userid = $1 ORDER BY "+tasksQueryParameters.OrderBy+" "+tasksQueryParameters.Order+" OFFSET $2 LIMIT $3",
+		userID,
+		tasksQueryParameters.Offset,
+		tasksQueryParameters.Limit,
+	)
 
 	if err != nil {
 		panic(err)
