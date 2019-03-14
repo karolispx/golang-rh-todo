@@ -1,7 +1,10 @@
 package helpers
 
 import (
+	"database/sql"
 	"encoding/json"
+	"fmt"
+	"log"
 	"os"
 )
 
@@ -37,4 +40,33 @@ func GetConfig() Configuration {
 	}
 
 	return Config
+}
+
+// InitDB - initialize DB
+func InitDB() *sql.DB {
+	// Get config
+	var Config = GetConfig()
+
+	// Initialize error variable
+	var err error
+
+	// Connection string
+	DBInfo := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		Config.DBHost, Config.DBPort, Config.DBUser, Config.DBPassword, Config.DBName,
+	)
+
+	// Open connection
+	DB, err := sql.Open("postgres", DBInfo)
+
+	// Panic if connection breaks or can not be opened
+	if err != nil {
+		log.Panic(err)
+	}
+
+	if err = DB.Ping(); err != nil {
+		log.Panic(err)
+	}
+
+	return DB
 }
