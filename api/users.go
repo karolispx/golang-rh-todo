@@ -83,3 +83,52 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 	return
 }
+
+// Login - process user login
+func Login(w http.ResponseWriter, r *http.Request) {
+	user := &User{}
+
+	err := json.NewDecoder(r.Body).Decode(user)
+
+	if err != nil {
+		response := "Please provide all information."
+
+		helpers.RestAPIRespond(w, r, response, "error", 422)
+
+		return
+	}
+
+	if user.Email == "" || user.Password == "" {
+		response := "Please provide all information."
+
+		helpers.RestAPIRespond(w, r, response, "error", 422)
+
+		return
+	}
+
+	DB := helpers.InitDB()
+
+	userID := models.UserValidLogin(DB, user.Email, user.Password)
+
+	defer DB.Close()
+
+	if userID > 0 {
+		generateJWT := helpers.GenerateJWT(userID)
+
+		if generateJWT != "" {
+			helpers.RestAPIRespond(w, r, generateJWT, "success", 200)
+
+			return
+		}
+
+		helpers.DefaultErrorRestAPIRespond(w, r)
+
+		return
+	}
+
+	response := "We could not log you in."
+
+	helpers.RestAPIRespond(w, r, response, "error", 403)
+
+	return
+}
