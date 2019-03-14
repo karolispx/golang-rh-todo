@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 	"strings"
@@ -84,5 +85,45 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 		helpers.RestAPIRespond(w, r, getUserTasks, "success", 200)
 
 		return
+	}
+}
+
+// CreateTask = create user task.
+func CreateTask(w http.ResponseWriter, r *http.Request) {
+	// Authenticate user to make sure user a valid user is attempting to view tasks.
+	userID := helpers.ValidateJWT(w, r)
+
+	// If user is authenticated, allow creating a task.
+	if userID > 0 {
+		task := &models.TaskDetails{}
+
+		err := json.NewDecoder(r.Body).Decode(task)
+
+		if err != nil {
+			helpers.RestAPIRespond(w, r, "Please provide a task.", "error", 422)
+
+			return
+		}
+
+		if task.Task == "" {
+			helpers.RestAPIRespond(w, r, "Please provide a task.", "error", 422)
+
+			return
+		}
+
+		DB := helpers.InitDB()
+
+		lastInsertID := models.CreateUserTask(userID, DB, task.Task)
+
+		defer DB.Close()
+
+		if lastInsertID < 1 {
+			helpers.DefaultErrorRestAPIRespond(w, r)
+
+			return
+		}
+
+		// Return success with taskID
+		helpers.RestAPIRespond(w, r, lastInsertID, "success", 200)
 	}
 }

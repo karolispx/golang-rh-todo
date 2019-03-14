@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 
+	"github.com/karolispx/golang-rh-todo/helpers"
 	_ "github.com/lib/pq"
 )
 
@@ -61,4 +62,20 @@ func GetUserTasks(userID int, DB *sql.DB, tasksQueryParameters TasksQueryParamet
 	}
 
 	return tasks
+}
+
+// CreateUserTask - create user task
+func CreateUserTask(userID int, DB *sql.DB, task string) int {
+	var lastInsertID int
+
+	// Insert user task db
+	getCurrentDateTime := helpers.GetCurrentDateTime()
+
+	err := DB.QueryRow("INSERT INTO tasks(userid, task, date_created, date_updated ) VALUES($1, $2, $3, $4) returning taskid;", userID, task, getCurrentDateTime, getCurrentDateTime).Scan(&lastInsertID)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return lastInsertID
 }
