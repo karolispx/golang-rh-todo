@@ -1,0 +1,11 @@
+{
+  "DBHost": "",
+  "DBPort": "",
+  "DBUser": "",
+  "DBPassword": "",
+  "DBName": "",
+  "Port": "8001",
+  "JWTSigningKey": "",
+  "RestAPIPath": "/api/v1",
+  "RestAPIURL": "http://localhost"
+}
