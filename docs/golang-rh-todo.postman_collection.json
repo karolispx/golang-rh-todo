@@ -1,0 +1,518 @@
+{
+	"info": {
+		"_postman_id": "fcfeed08-340b-49ef-bcad-2e10a810cfbf",
+		"name": "golang-rh-todo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"thisisrandomemail@email.com\",\n\t\"password\": \"thisisrandompassword\",\n\t\"password2\": \"thisisrandompassword\"\n}"
+						},
+						"url": {
+							"raw": "http://ec2-63-35-215-84.eu-west-1.compute.amazonaws.com:8001/api/v1/auth/register",
+							"protocol": "http",
+							"host": [
+								"ec2-63-35-215-84",
+								"eu-west-1",
+								"compute",
+								"amazonaws",
+								"com"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"thisisrandomemail@email.com\",\n\t\"password\": \"thisisrandompassword\"\n}"
+						},
+						"url": {
+							"raw": "http://ec2-63-35-215-84.eu-west-1.compute.amazonaws.com:8001/api/v1/auth/login",
+							"protocol": "http",
+							"host": [
+								"ec2-63-35-215-84",
+								"eu-west-1",
+								"compute",
+								"amazonaws",
+								"com"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4d1d9da9-6f79-4b29-9fca-2ef73cd2ee31",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c0e7142d-3ec6-4c76-93f4-c764fa03dc7b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "tasks",
+			"item": [
+				{
+					"name": "watch",
+					"item": [
+						{
+							"name": "WatchTask",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjcsImV4cCI6MTU1MzI0MjEwMn0.5nrPJ0TpTeIpVVZzSD0MKE10iVQKY2i_19zwccZhS7I",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://ec2-63-35-215-84.eu-west-1.compute.amazonaws.com:8001/api/v1/tasks/watch/6",
+									"protocol": "http",
+									"host": [
+										"ec2-63-35-215-84",
+										"eu-west-1",
+										"compute",
+										"amazonaws",
+										"com"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"v1",
+										"tasks",
+										"watch",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UnwatchTask",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjcsImV4cCI6MTU1MzI0MjEwMn0.5nrPJ0TpTeIpVVZzSD0MKE10iVQKY2i_19zwccZhS7I",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://ec2-63-35-215-84.eu-west-1.compute.amazonaws.com:8001/api/v1/tasks/unwatch/6",
+									"protocol": "http",
+									"host": [
+										"ec2-63-35-215-84",
+										"eu-west-1",
+										"compute",
+										"amazonaws",
+										"com"
+									],
+									"port": "8001",
+									"path": [
+										"api",
+										"v1",
+										"tasks",
+										"unwatch",
+										"6"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "GetTasks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjcsImV4cCI6MTU1MzI0MjEwMn0.5nrPJ0TpTeIpVVZzSD0MKE10iVQKY2i_19zwccZhS7I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://ec2-63-35-215-84.eu-west-1.compute.amazonaws.com:8001/api/v1/tasks",
+							"protocol": "http",
+							"host": [
+								"ec2-63-35-215-84",
+								"eu-west-1",
+								"compute",
+								"amazonaws",
+								"com"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"v1",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateTask",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjcsImV4cCI6MTU1MzI0MjEwMn0.5nrPJ0TpTeIpVVZzSD0MKE10iVQKY2i_19zwccZhS7I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"task\": \"This my new task!\"\n}"
+						},
+						"url": {
+							"raw": "http://ec2-63-35-215-84.eu-west-1.compute.amazonaws.com:8001/api/v1/tasks",
+							"protocol": "http",
+							"host": [
+								"ec2-63-35-215-84",
+								"eu-west-1",
+								"compute",
+								"amazonaws",
+								"com"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"v1",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteTasks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjcsImV4cCI6MTU1MzI0MjEwMn0.5nrPJ0TpTeIpVVZzSD0MKE10iVQKY2i_19zwccZhS7I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://ec2-63-35-215-84.eu-west-1.compute.amazonaws.com:8001/api/v1/tasks",
+							"protocol": "http",
+							"host": [
+								"ec2-63-35-215-84",
+								"eu-west-1",
+								"compute",
+								"amazonaws",
+								"com"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"v1",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTask",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjcsImV4cCI6MTU1MzI0MjEwMn0.5nrPJ0TpTeIpVVZzSD0MKE10iVQKY2i_19zwccZhS7I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://ec2-63-35-215-84.eu-west-1.compute.amazonaws.com:8001/api/v1/tasks/6",
+							"protocol": "http",
+							"host": [
+								"ec2-63-35-215-84",
+								"eu-west-1",
+								"compute",
+								"amazonaws",
+								"com"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"v1",
+								"tasks",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTask",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjcsImV4cCI6MTU1MzI0MjEwMn0.5nrPJ0TpTeIpVVZzSD0MKE10iVQKY2i_19zwccZhS7I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"task\": \"This my new task!\"\n}"
+						},
+						"url": {
+							"raw": "http://ec2-63-35-215-84.eu-west-1.compute.amazonaws.com:8001/api/v1/tasks/6",
+							"protocol": "http",
+							"host": [
+								"ec2-63-35-215-84",
+								"eu-west-1",
+								"compute",
+								"amazonaws",
+								"com"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"v1",
+								"tasks",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteTask",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjcsImV4cCI6MTU1MzI0MjEwMn0.5nrPJ0TpTeIpVVZzSD0MKE10iVQKY2i_19zwccZhS7I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://ec2-63-35-215-84.eu-west-1.compute.amazonaws.com:8001/api/v1/tasks/6",
+							"protocol": "http",
+							"host": [
+								"ec2-63-35-215-84",
+								"eu-west-1",
+								"compute",
+								"amazonaws",
+								"com"
+							],
+							"port": "8001",
+							"path": [
+								"api",
+								"v1",
+								"tasks",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "77cac037-3c95-4952-bb54-60739d39b986",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "5ff737cb-77fd-4dba-87ae-352f15113eed",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
