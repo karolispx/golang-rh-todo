@@ -11,7 +11,7 @@ import (
 	"github.com/karolispx/golang-rh-todo/models"
 )
 
-// GetTasks - get user tasks query parameters.
+// GetTasks - get user tasks by query parameters.
 func GetTasks(w http.ResponseWriter, r *http.Request) {
 	// Authenticate user to make sure user a valid user.
 	userID := helpers.ValidateJWT(w, r)
@@ -34,10 +34,11 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 		// Pagination/filtering/sorting/search
 		// Default query parameters
 		tasksQueryParameters := models.TasksQueryParameters{
-			Limit:   10,
-			Offset:  0,
-			OrderBy: "taskid",
-			Order:   "desc",
+			Limit:    10,
+			Offset:   0,
+			OrderBy:  "taskid",
+			Order:    "desc",
+			Watching: "",
 		}
 
 		// Get query vars from the request
@@ -86,6 +87,18 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 
 			if orderQueryVar == "asc" || orderQueryVar == "desc" {
 				tasksQueryParameters.Order = orderQueryVar
+			}
+		}
+
+		// Watching
+		watchingQueryVar := queryVariables.Get("watching")
+
+		if watchingQueryVar != "" {
+			// Convert to lowercase to avoid problems
+			watchingQueryVar = strings.ToLower(watchingQueryVar)
+
+			if watchingQueryVar == "yes" || watchingQueryVar == "no" {
+				tasksQueryParameters.Watching = watchingQueryVar
 			}
 		}
 

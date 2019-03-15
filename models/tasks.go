@@ -18,19 +18,26 @@ type TaskDetails struct {
 
 // TasksQueryParameters - parameters for tasks' query
 type TasksQueryParameters struct {
-	Limit   int
-	Offset  int
-	OrderBy string
-	Order   string
+	Limit    int
+	Offset   int
+	OrderBy  string
+	Order    string
+	Watching string
 }
 
 // GetUserTasks - get tasks.
 func GetUserTasks(DB *sql.DB, userID int, tasksQueryParameters TasksQueryParameters) ([]TaskDetails, int) {
 	countTasksReturned := 0
 
+	var watchingQuery string
+
+	if tasksQueryParameters.Watching != "" {
+		watchingQuery = " AND watching = '" + tasksQueryParameters.Watching + "'"
+	}
+
 	// Get user tasks based on filters provided
 	rows, err := DB.Query(
-		"SELECT * FROM tasks WHERE userid = $1 ORDER BY "+tasksQueryParameters.OrderBy+" "+tasksQueryParameters.Order+" OFFSET $2 LIMIT $3",
+		"SELECT * FROM tasks WHERE userid = $1 "+watchingQuery+" ORDER BY "+tasksQueryParameters.OrderBy+" "+tasksQueryParameters.Order+" OFFSET $2 LIMIT $3",
 		userID,
 		tasksQueryParameters.Offset,
 		tasksQueryParameters.Limit,
