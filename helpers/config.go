@@ -26,8 +26,10 @@ func GetConfig() Configuration {
 	// Extract variable from config.json file
 	file, err := os.Open("config.json")
 
+	configExists := true
+
 	if err != nil {
-		panic(err)
+		configExists = false
 	}
 
 	var Config Configuration
@@ -36,7 +38,46 @@ func GetConfig() Configuration {
 	err = decoder.Decode(&Config)
 
 	if err != nil {
-		panic(err)
+		configExists = false
+	}
+
+	// If config.json file doesn't exist, get config variables from environmental variables
+	if configExists == false {
+		if os.Getenv("DBHOST") != "" {
+			Config.DBHost = os.Getenv("DBHOST")
+		}
+
+		if os.Getenv("DBPORT") != "" {
+			Config.DBPort = os.Getenv("DBPORT")
+		}
+
+		if os.Getenv("DBUSER") != "" {
+			Config.DBUser = os.Getenv("DBUSER")
+		}
+
+		if os.Getenv("DBPASSWORD") != "" {
+			Config.DBPassword = os.Getenv("DBPASSWORD")
+		}
+
+		if os.Getenv("DBNAME") != "" {
+			Config.DBName = os.Getenv("DBNAME")
+		}
+
+		if os.Getenv("PORT") != "" {
+			Config.Port = os.Getenv("PORT")
+		}
+
+		if os.Getenv("JWTSIGNINGKEY") != "" {
+			Config.JWTSigningKey = os.Getenv("JWTSIGNINGKEY")
+		}
+
+		if os.Getenv("RESTAPIPATH") != "" {
+			Config.RestAPIPath = os.Getenv("RESTAPIPATH")
+		}
+
+		if os.Getenv("RESTAPIURL") != "" {
+			Config.RestAPIURL = os.Getenv("RESTAPIURL")
+		}
 	}
 
 	return Config

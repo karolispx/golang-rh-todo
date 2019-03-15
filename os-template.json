@@ -1,0 +1,184 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "GoLang RH TODO Application",
+    "annotations": {
+      "description": "GoLang RH Todo Application",
+      "tags": "golang",
+      "iconClass": "icon-golang"
+    }
+  },
+  "parameters": [
+    {
+      "name": "DBHOST",
+      "value": "",
+      "description": "PostgreSQL Database HOST.",
+      "required": true
+    },
+    {
+      "name": "DBPORT",
+      "value": "",
+      "description": "PostgreSQL Database PORT.",
+      "required": true
+    },
+    {
+      "name": "DBUSER",
+      "value": "",
+      "description": "PostgreSQL Database USER.",
+      "required": true
+    },
+    {
+      "name": "DBPASSWORD",
+      "value": "",
+      "description": "PostgreSQL Database PASSWORD.",
+      "required": true
+    },
+    {
+      "name": "DBNAME",
+      "value": "",
+      "description": "PostgreSQL Database NAME.",
+      "required": true
+    },
+    {
+      "name": "PORT",
+      "value": "8001",
+      "description": "The port the service runs on.",
+      "required": true
+    },
+    {
+      "name": "JWTSIGNINGKEY",
+      "value": "",
+      "description": "JWT signing key.",
+      "required": true
+    },
+    {
+      "name": "RESTAPIPATH",
+      "value": "/api/v1",
+      "description": "Rest api path.",
+      "required": false
+    },
+    {
+      "name": "RESTAPIURL",
+      "value": "http://localhost",
+      "description": "Public URL of the application.",
+      "required": false
+    }
+  ],
+  "objects": [
+    {
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "golang-rh-todo",
+        "labels": {
+          "name": "golang-rh-todo"
+        }
+      },
+      "spec": {
+        "selector": {
+          "name": "golang-rh-todo"
+        },
+        "ports": [
+          {
+            "name": "golang-rh-todo-port-secure",
+            "port": "${{PORT}}",
+            "targetPort": "${{PORT}}",
+            "protocol": "TCP"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "DeploymentConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "golang-rh-todo",
+        "labels": {
+          "name": "golang-rh-todo"
+        }
+      },
+      "spec": {
+        "triggers": [
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "replicas": 1,
+        "selector": {
+          "name": "golang-rh-todo"
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "name": "golang-rh-todo"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "golang-rh-todo",
+                "image": "docker.io/karolispx/golang-rh-todo:latest",
+                "ports": [
+                  {
+                    "containerPort": "${{PORT}}"
+                  }
+                ],
+
+                "env": [
+                  {
+                    "name": "DBHOST",
+                    "value": "${DBHOST}"
+                  },
+                  {
+                    "name": "DBPORT",
+                    "value": "${DBPORT}"
+                  },
+                  {
+                    "name": "DBUSER",
+                    "value": "${DBUSER}"
+                  },
+                  {
+                    "name": "DBPASSWORD",
+                    "value": "${DBPASSWORD}"
+                  },
+                  {
+                    "name": "DBNAME",
+                    "value": "${DBNAME}"
+                  },
+                  {
+                    "name": "PORT",
+                    "value": "${PORT}"
+                  },
+                  {
+                    "name": "JWTSIGNINGKEY",
+                    "value": "${JWTSIGNINGKEY}"
+                  },
+                  {
+                    "name": "RESTAPIPATH",
+                    "value": "${RESTAPIPATH}"
+                  },
+                  {
+                    "name": "RESTAPIURL",
+                    "value": "${RESTAPIURL}"
+                  }
+                ],
+                "imagePullPolicy": "Always",
+                "resources": {
+                  "limits": {
+                    "cpu": "1000m",
+                    "memory": "1G"
+                  },
+                  "requests": {
+                    "cpu": "10m",
+                    "memory": "250Mi"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
