@@ -2,13 +2,14 @@ package models
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/karolispx/golang-rh-todo/helpers"
 	_ "github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 )
 
-// CountUsersWithEmailAddress to see if user with this email address exists already
+// CountUsersWithEmailAddress - check to see if user with this email address exists already
 func CountUsersWithEmailAddress(DB *sql.DB, emailAddress string) int {
 	countUsers := 0
 
@@ -24,7 +25,7 @@ func CountUsersWithEmailAddress(DB *sql.DB, emailAddress string) int {
 	return countUsers
 }
 
-// CreateUser in the DB
+// CreateUser - create user.
 func CreateUser(DB *sql.DB, emailAddress string, password string) int {
 	var lastInsertID int
 
@@ -32,7 +33,9 @@ func CreateUser(DB *sql.DB, emailAddress string, password string) int {
 	userPassword := string(hashedPassword)
 
 	// Insert account into db
-	err = DB.QueryRow("INSERT INTO users(email_address, password, date_created ) VALUES($1, $2, $3) returning userid;", emailAddress, userPassword, helpers.GetCurrentDateTime()).Scan(&lastInsertID)
+	getCurrentDateTime := helpers.GetCurrentDateTime()
+
+	err = DB.QueryRow("INSERT INTO users(email_address, password, last_action, date_created ) VALUES($1, $2, $3, $4) returning userid;", emailAddress, userPassword, getCurrentDateTime, getCurrentDateTime).Scan(&lastInsertID)
 
 	if err != nil {
 		panic(err)
@@ -41,7 +44,7 @@ func CreateUser(DB *sql.DB, emailAddress string, password string) int {
 	return lastInsertID
 }
 
-// UserValidLogin by email address and password
+// UserValidLogin - check if user login is valid.
 func UserValidLogin(DB *sql.DB, emailAddress string, password string) int {
 	// See if user with this email address and password exists
 	rows, err := DB.Query("SELECT * FROM users where email_address = $1", emailAddress)
@@ -61,9 +64,10 @@ func UserValidLogin(DB *sql.DB, emailAddress string, password string) int {
 		var idFromDB int
 		var emailFromDB string
 		var passwordFromDB string
+		var LastAction string
 		var DateCreated string
 
-		err = rows.Scan(&idFromDB, &emailFromDB, &passwordFromDB, &DateCreated)
+		err = rows.Scan(&idFromDB, &emailFromDB, &passwordFromDB, &LastAction, &DateCreated)
 
 		if err != nil {
 			panic(err)
@@ -90,4 +94,51 @@ func UserValidLogin(DB *sql.DB, emailAddress string, password string) int {
 	}
 
 	return 0
+}
+
+// UpdateUserLastAction - update user last action.
+func UpdateUserLastAction(DB *sql.DB, userID int) int {
+	lastUpdatedID := 0
+
+	err := DB.QueryRow("UPDATE users SET last_action = $1 WHERE userid = $2 returning userid;",
+		helpers.GetCurrentDateTime(), userID).Scan(&lastUpdatedID)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return lastUpdatedID
+}
+
+// UserNeedsCooldown - check to see if user is not trying to spam the system.
+func UserNeedsCooldown(DB *sql.DB, userID int) bool {
+	var lastAction string
+
+	row := DB.QueryRow("SELECT last_action FROM users where userid = $1", userID)
+
+	err := row.Scan(&lastAction)
+
+	if err != nil {
+		panic(err)
+	}
+
+	// Compare the date/time of last action and the current date/time to see if enough time has passed from last action
+	if lastAction != "" {
+		lastActionTime, err := time.Parse("2006.01.02 15:04:05", lastAction)
+
+		if err == nil {
+			// 5 seconds antispam protection
+			cooldownTime := lastActionTime.Add(5 * time.Second)
+			currentTime := time.Now()
+
+			// timeLeft := currentTime.Sub(lastActionTime)
+			timeLeft := cooldownTime.Sub(currentTime)
+
+			if timeLeft > 0 {
+				return true
+			}
+		}
+	}
+
+	return false
 }

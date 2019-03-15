@@ -30,10 +30,16 @@ func initRoutes() {
 	router.HandleFunc(Config.RestAPIPath+"/auth/login", api.Login).Methods("POST")       // User login
 
 	// User tasks. Require authentication.
-	router.HandleFunc(Config.RestAPIPath+"/tasks", api.GetTasks).Methods("GET")               // Get tasks
-	router.HandleFunc(Config.RestAPIPath+"/tasks", api.CreateTask).Methods("POST")            // Create Task
-	router.HandleFunc(Config.RestAPIPath+"/tasks/{taskid}", api.UpdateTask).Methods("PUT")    // Update task
-	router.HandleFunc(Config.RestAPIPath+"/tasks/{taskid}", api.DeleteTask).Methods("DELETE") // Delete task
+	router.HandleFunc(Config.RestAPIPath+"/tasks", api.GetTasks).Methods("GET")       // Get tasks
+	router.HandleFunc(Config.RestAPIPath+"/tasks", api.CreateTask).Methods("POST")    // Create a task
+	router.HandleFunc(Config.RestAPIPath+"/tasks", api.DeleteTasks).Methods("DELETE") // Delete all tasks
+
+	router.HandleFunc(Config.RestAPIPath+"/tasks/{taskid}", api.GetTask).Methods("GET")       // Get a specific task
+	router.HandleFunc(Config.RestAPIPath+"/tasks/{taskid}", api.UpdateTask).Methods("PUT")    // Update a specific task
+	router.HandleFunc(Config.RestAPIPath+"/tasks/{taskid}", api.DeleteTask).Methods("DELETE") // Delete a specific task
+
+	router.HandleFunc(Config.RestAPIPath+"/tasks/watch/{taskid}", api.WatchTask).Methods("PUT")     // Watch a specific task
+	router.HandleFunc(Config.RestAPIPath+"/tasks/unwatch/{taskid}", api.UnwatchTask).Methods("PUT") // Unwatch a specific task
 
 	// Print out the URL of the API
 	fmt.Println("Server is running on: " + Config.RestAPIURL + ":" + Config.Port)
