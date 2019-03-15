@@ -4,7 +4,7 @@
 ## About This Application
 1. GoLang application is hosted on **AWS EC2 Instance**.
 2. PostgreSQL database is hosted on **AWS RDS**.
-3. API documentation is currently hosted on **Swagger Hub** and can be used for making all API calls that are available in the application. More information contained in links below. 
+3. API documentation is currently hosted on **Swagger Hub** (https://app.swaggerhub.com/apis/karolispx/golang-rh-todo/1.0.0-oas3/) and can be used for making all API calls that are available in the application. More information contained in links below. 
 4. **docs** folder in the repository also contains HTML generated Swagger docs and Postman collection in JSON format.
 
 ***
