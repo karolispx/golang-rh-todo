@@ -13,9 +13,9 @@ import (
 
 // RestAPIResponse message
 type RestAPIResponse struct {
-	Type     string      `json:"type"`
-	Status   int         `json:"status"`
-	Response interface{} `json:"response"`
+	Type    string      `json:"type"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 // Token information
@@ -25,15 +25,15 @@ type Token struct {
 }
 
 // RestAPIRespond - process rest api response
-func RestAPIRespond(w http.ResponseWriter, r *http.Request, response interface{}, responseType string, statusCode int) {
+func RestAPIRespond(w http.ResponseWriter, r *http.Request, message string, data interface{}, responseType string, status int) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	w.WriteHeader(statusCode)
+	w.WriteHeader(status)
 
 	returnResponse := RestAPIResponse{
-		Type:     responseType,
-		Status:   statusCode,
-		Response: response,
+		Type:    responseType,
+		Message: message,
+		Data:    data,
 	}
 
 	json.NewEncoder(w).Encode(returnResponse)
@@ -41,9 +41,7 @@ func RestAPIRespond(w http.ResponseWriter, r *http.Request, response interface{}
 
 // DefaultErrorRestAPIRespond - respond with default server 500 error
 func DefaultErrorRestAPIRespond(w http.ResponseWriter, r *http.Request) {
-	response := "An error occured. Please try again later."
-
-	RestAPIRespond(w, r, response, "error", 500)
+	RestAPIRespond(w, r, "An error occured. Please try again later.", "", "error", 500)
 }
 
 // GetCurrentDateTime in string format
@@ -78,9 +76,7 @@ func ValidateJWT(w http.ResponseWriter, r *http.Request) int {
 	tokenHeader := r.Header.Get("Authorization")
 
 	if tokenHeader == "" {
-		response := "You need to be logged in to access this page."
-
-		RestAPIRespond(w, r, response, "error", 403)
+		RestAPIRespond(w, r, "You need to be logged in to access this page.", "", "error", 403)
 
 		return 0
 	}
@@ -88,9 +84,7 @@ func ValidateJWT(w http.ResponseWriter, r *http.Request) int {
 	splitted := strings.Split(tokenHeader, " ")
 
 	if len(splitted) != 2 {
-		response := "You need to be logged in to access this page."
-
-		RestAPIRespond(w, r, response, "error", 403)
+		RestAPIRespond(w, r, "You need to be logged in to access this page.", "", "error", 403)
 
 		return 0
 	}
@@ -107,17 +101,13 @@ func ValidateJWT(w http.ResponseWriter, r *http.Request) int {
 
 	// Malformed token, returns with http code 403 as usual
 	if err != nil {
-		response := "You need to be logged in to access this page."
-
-		RestAPIRespond(w, r, response, "error", 403)
+		RestAPIRespond(w, r, "You need to be logged in to access this page.", "", "error", 403)
 
 		return 0
 	}
 
 	if !token.Valid {
-		response := "You need to be logged in to access this page."
-
-		RestAPIRespond(w, r, response, "error", 403)
+		RestAPIRespond(w, r, "You need to be logged in to access this page.", "", "error", 403)
 
 		return 0
 	}

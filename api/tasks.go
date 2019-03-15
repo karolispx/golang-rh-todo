@@ -11,7 +11,7 @@ import (
 	"github.com/karolispx/golang-rh-todo/models"
 )
 
-// GetTasks - get user tasks.
+// GetTasks - get user tasks query parameters.
 func GetTasks(w http.ResponseWriter, r *http.Request) {
 	// Authenticate user to make sure user a valid user.
 	userID := helpers.ValidateJWT(w, r)
@@ -21,6 +21,15 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 		DB := helpers.InitDB()
 
 		defer DB.Close()
+
+		// User cooldown period - antispam.
+		userNeedsCooldown := models.UserNeedsCooldown(DB, userID)
+
+		if userNeedsCooldown == true {
+			helpers.RestAPIRespond(w, r, "Please slow down. You have been making too many requests.", "", "error", 422)
+
+			return
+		}
 
 		// Pagination/filtering/sorting/search
 		// Default query parameters
@@ -81,9 +90,64 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Get user tasks
-		getUserTasks := models.GetUserTasks(userID, DB, tasksQueryParameters)
+		userTasks, countTasksReturned := models.GetUserTasks(DB, userID, tasksQueryParameters)
 
-		helpers.RestAPIRespond(w, r, getUserTasks, "success", 200)
+		if countTasksReturned < 1 {
+			helpers.RestAPIRespond(w, r, "No tasks available.", userTasks, "error", 422)
+
+			return
+		}
+
+		models.UpdateUserLastAction(DB, userID)
+
+		helpers.RestAPIRespond(w, r, "", userTasks, "success", 200)
+
+		return
+	}
+}
+
+// GetTask - get user task by task ID.
+func GetTask(w http.ResponseWriter, r *http.Request) {
+	// Authenticate user to make sure user a valid user.
+	userID := helpers.ValidateJWT(w, r)
+
+	// If user is authenticated, get user task.
+	if userID > 0 {
+		DB := helpers.InitDB()
+
+		// User cooldown period - antispam.
+		userNeedsCooldown := models.UserNeedsCooldown(DB, userID)
+
+		if userNeedsCooldown == true {
+			helpers.RestAPIRespond(w, r, "Please slow down. You have been making too many requests.", "", "error", 422)
+
+			return
+		}
+
+		vars := mux.Vars(r)
+		taskid := vars["taskid"]
+
+		if taskid == "" {
+			helpers.RestAPIRespond(w, r, "Please provide task ID.", "", "error", 422)
+
+			return
+		}
+
+		// Get user task
+		userTask, taskExists := models.GetUserTask(DB, taskid, userID)
+
+		// Check if this task belongs to the user
+		if taskExists == false {
+			helpers.RestAPIRespond(w, r, "This task does not belong to you!", "", "error", 422)
+
+			return
+		}
+
+		defer DB.Close()
+
+		models.UpdateUserLastAction(DB, userID)
+
+		helpers.RestAPIRespond(w, r, "", userTask, "success", 200)
 
 		return
 	}
@@ -96,52 +160,74 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 
 	// If user is authenticated, allow creating a task.
 	if userID > 0 {
+		DB := helpers.InitDB()
+
+		// User cooldown period - antispam.
+		userNeedsCooldown := models.UserNeedsCooldown(DB, userID)
+
+		if userNeedsCooldown == true {
+			helpers.RestAPIRespond(w, r, "Please slow down. You have been making too many requests.", "", "error", 422)
+
+			return
+		}
+
 		task := &models.TaskDetails{}
 
 		err := json.NewDecoder(r.Body).Decode(task)
 
 		if err != nil {
-			helpers.RestAPIRespond(w, r, "Please provide a task.", "error", 422)
+			helpers.RestAPIRespond(w, r, "Please provide a task.", "", "error", 422)
 
 			return
 		}
 
 		if task.Task == "" {
-			helpers.RestAPIRespond(w, r, "Please provide a task.", "error", 422)
+			helpers.RestAPIRespond(w, r, "Please provide a task.", "", "error", 422)
 
 			return
 		}
 
-		DB := helpers.InitDB()
-
-		lastInsertID := models.CreateUserTask(userID, DB, task.Task)
+		createdTask, createError := models.CreateUserTask(DB, userID, task.Task)
 
 		defer DB.Close()
 
-		if lastInsertID < 1 {
+		if createError == true {
 			helpers.DefaultErrorRestAPIRespond(w, r)
 
 			return
 		}
 
-		helpers.RestAPIRespond(w, r, lastInsertID, "success", 201)
+		models.UpdateUserLastAction(DB, userID)
+
+		helpers.RestAPIRespond(w, r, "Task has been created successfully!", createdTask, "success", 201)
 
 		return
 	}
 }
 
-// UpdateTask - update user task.
+// UpdateTask - update user task by task ID.
 func UpdateTask(w http.ResponseWriter, r *http.Request) {
 	// Authenticate user to make sure user a valid user.
 	userID := helpers.ValidateJWT(w, r)
 
 	// If user is authenticated, allow updating a task.
 	if userID > 0 {
+		DB := helpers.InitDB()
+
+		// User cooldown period - antispam.
+		userNeedsCooldown := models.UserNeedsCooldown(DB, userID)
+
+		if userNeedsCooldown == true {
+			helpers.RestAPIRespond(w, r, "Please slow down. You have been making too many requests.", "", "error", 422)
+
+			return
+		}
+
 		vars := mux.Vars(r)
 		taskid := vars["taskid"]
 
 		if taskid == "" {
-			helpers.RestAPIRespond(w, r, "Please provide task ID.", "error", 422)
+			helpers.RestAPIRespond(w, r, "Please provide task ID.", "", "error", 422)
 
 			return
 		}
@@ -151,67 +237,78 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 		err := json.NewDecoder(r.Body).Decode(task)
 
 		if err != nil {
-			helpers.RestAPIRespond(w, r, "Please provide a task.", "error", 422)
+			helpers.RestAPIRespond(w, r, "Please provide a task.", "", "error", 422)
 
 			return
 		}
 
 		if task.Task == "" {
-			helpers.RestAPIRespond(w, r, "Please provide a task.", "error", 422)
+			helpers.RestAPIRespond(w, r, "Please provide a task.", "", "error", 422)
 
 			return
 		}
 
-		DB := helpers.InitDB()
+		// Get user task
+		_, taskExists := models.GetUserTask(DB, taskid, userID)
 
 		// Check if this task belongs to the user
-		checkTaskBelongsToUser := models.CheckTaskBelongsToUser(DB, taskid, userID)
-
-		if checkTaskBelongsToUser < 1 {
-			helpers.RestAPIRespond(w, r, "This task does not belong to you!", "error", 422)
+		if taskExists == false {
+			helpers.RestAPIRespond(w, r, "This task does not belong to you!", "", "error", 422)
 
 			return
 		}
 
-		updateTask := models.UpdateUserTask(DB, taskid, userID, task.Task)
+		updatedTask, updateError := models.UpdateUserTask(DB, taskid, userID, task.Task)
 
 		defer DB.Close()
 
-		if updateTask < 1 {
+		if updateError == true {
 			helpers.DefaultErrorRestAPIRespond(w, r)
 
 			return
 		}
 
-		helpers.RestAPIRespond(w, r, "Task has been updated successfully!", "success", 200)
+		models.UpdateUserLastAction(DB, userID)
+
+		helpers.RestAPIRespond(w, r, "Task has been updated successfully!", updatedTask, "success", 200)
 
 		return
 	}
 }
 
-// DeleteTask - delete user task.
+// DeleteTask - delete user task by task ID.
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	// Authenticate user to make sure user a valid user.
 	userID := helpers.ValidateJWT(w, r)
 
 	// If user is authenticated, allow deleting a task.
 	if userID > 0 {
-		vars := mux.Vars(r)
-		taskid := vars["taskid"]
+		DB := helpers.InitDB()
 
-		if taskid == "" {
-			helpers.RestAPIRespond(w, r, "Please provide task ID.", "error", 422)
+		// User cooldown period - antispam.
+		userNeedsCooldown := models.UserNeedsCooldown(DB, userID)
+
+		if userNeedsCooldown == true {
+			helpers.RestAPIRespond(w, r, "Please slow down. You have been making too many requests.", "", "error", 422)
 
 			return
 		}
 
-		DB := helpers.InitDB()
+		vars := mux.Vars(r)
+		taskid := vars["taskid"]
+
+		if taskid == "" {
+			helpers.RestAPIRespond(w, r, "Please provide task ID.", "", "error", 422)
+
+			return
+		}
+
+		// Get user task
+		_, taskExists := models.GetUserTask(DB, taskid, userID)
 
 		// Check if this task belongs to the user
-		checkTaskBelongsToUser := models.CheckTaskBelongsToUser(DB, taskid, userID)
-
-		if checkTaskBelongsToUser < 1 {
-			helpers.RestAPIRespond(w, r, "This task does not belong to you!", "error", 422)
+		if taskExists == false {
+			helpers.RestAPIRespond(w, r, "This task does not belong to you!", "", "error", 422)
 
 			return
 		}
@@ -226,7 +323,173 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		helpers.RestAPIRespond(w, r, "Task has been deleted successfully!", "success", 204)
+		models.UpdateUserLastAction(DB, userID)
+
+		helpers.RestAPIRespond(w, r, "Task has been deleted successfully!", "", "success", 200)
+
+		return
+	}
+}
+
+// DeleteTasks - delete all user tasks by user ID.
+func DeleteTasks(w http.ResponseWriter, r *http.Request) {
+	// Authenticate user to make sure user a valid user.
+	userID := helpers.ValidateJWT(w, r)
+
+	// If user is authenticated, allow deleting all tasks.
+	if userID > 0 {
+		DB := helpers.InitDB()
+
+		// User cooldown period - antispam.
+		userNeedsCooldown := models.UserNeedsCooldown(DB, userID)
+
+		if userNeedsCooldown == true {
+			helpers.RestAPIRespond(w, r, "Please slow down. You have been making too many requests.", "", "error", 422)
+
+			return
+		}
+
+		deleteTasks := models.DeleteUserTasks(DB, userID)
+
+		defer DB.Close()
+
+		if deleteTasks == false {
+			helpers.DefaultErrorRestAPIRespond(w, r)
+
+			return
+		}
+
+		models.UpdateUserLastAction(DB, userID)
+
+		helpers.RestAPIRespond(w, r, "All Tasks have been deleted successfully!", "", "success", 200)
+
+		return
+	}
+}
+
+// WatchTask - watch a task by task ID.
+func WatchTask(w http.ResponseWriter, r *http.Request) {
+	// Authenticate user to make sure user a valid user.
+	userID := helpers.ValidateJWT(w, r)
+
+	// If user is authenticated, allow watching a task.
+	if userID > 0 {
+		DB := helpers.InitDB()
+
+		// User cooldown period - antispam.
+		userNeedsCooldown := models.UserNeedsCooldown(DB, userID)
+
+		if userNeedsCooldown == true {
+			helpers.RestAPIRespond(w, r, "Please slow down. You have been making too many requests.", "", "error", 422)
+
+			return
+		}
+
+		vars := mux.Vars(r)
+		taskid := vars["taskid"]
+
+		if taskid == "" {
+			helpers.RestAPIRespond(w, r, "Please provide task ID.", "error", "", 422)
+
+			return
+		}
+
+		// Get user task
+		userTask, taskExists := models.GetUserTask(DB, taskid, userID)
+
+		// Check if this task belongs to the user
+		if taskExists == false {
+			helpers.RestAPIRespond(w, r, "This task does not belong to you!", "", "error", 422)
+
+			return
+		}
+
+		// Check if user is watching this task
+		if userTask.Watching != "" && userTask.Watching == "yes" {
+			helpers.RestAPIRespond(w, r, "You can not watch a task that you are already watching!", "", "error", 422)
+
+			return
+		}
+
+		lastUpdatedID := models.WatchingUserTask(DB, taskid, userID, "yes")
+
+		defer DB.Close()
+
+		if lastUpdatedID < 1 {
+			helpers.DefaultErrorRestAPIRespond(w, r)
+
+			return
+		}
+
+		models.UpdateUserLastAction(DB, userID)
+
+		userTask.Watching = "yes"
+
+		helpers.RestAPIRespond(w, r, "You are now watching this task!", userTask, "success", 201)
+
+		return
+	}
+}
+
+// UnwatchTask - unwatch a task by task ID.
+func UnwatchTask(w http.ResponseWriter, r *http.Request) {
+	// Authenticate user to make sure user a valid user.
+	userID := helpers.ValidateJWT(w, r)
+
+	// If user is authenticated, allow unwatching a task.
+	if userID > 0 {
+		DB := helpers.InitDB()
+
+		// User cooldown period - antispam.
+		userNeedsCooldown := models.UserNeedsCooldown(DB, userID)
+
+		if userNeedsCooldown == true {
+			helpers.RestAPIRespond(w, r, "Please slow down. You have been making too many requests.", "", "error", 422)
+
+			return
+		}
+
+		vars := mux.Vars(r)
+		taskid := vars["taskid"]
+
+		if taskid == "" {
+			helpers.RestAPIRespond(w, r, "Please provide task ID.", "", "error", 422)
+
+			return
+		}
+
+		// Get user task
+		userTask, taskExists := models.GetUserTask(DB, taskid, userID)
+
+		// Check if this task belongs to the user
+		if taskExists == false {
+			helpers.RestAPIRespond(w, r, "This task does not belong to you!", "", "error", 422)
+
+			return
+		}
+
+		// Check if user is watching this task
+		if userTask.Watching != "" && userTask.Watching == "no" {
+			helpers.RestAPIRespond(w, r, "You can not unwatch a task that you are not watching!", "", "error", 422)
+
+			return
+		}
+
+		lastUpdatedID := models.WatchingUserTask(DB, taskid, userID, "no")
+
+		defer DB.Close()
+
+		if lastUpdatedID < 1 {
+			helpers.DefaultErrorRestAPIRespond(w, r)
+
+			return
+		}
+
+		models.UpdateUserLastAction(DB, userID)
+
+		userTask.Watching = "no"
+
+		helpers.RestAPIRespond(w, r, "You are no longer watching this task!", userTask, "success", 201)
 
 		return
 	}
