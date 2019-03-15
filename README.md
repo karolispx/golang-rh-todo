@@ -1,7 +1,7 @@
 # Simple TODO app built in GoLang using PostgreSQL for data storage.
 ***
 ## Complete Swagger Documentation
-https://app.swaggerhub.com/apis/karolispx/golang-rh-todo/1.0.0
+https://app.swaggerhub.com/apis/karolispx/golang-rh-todo/1.0.0-oas3
 ***
 
 ## Features & Endpoints
