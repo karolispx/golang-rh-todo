@@ -1,10 +1,18 @@
 # Simple TODO app built in GoLang using PostgreSQL for data storage.
 ***
-## Complete Swagger Documentation
-https://app.swaggerhub.com/apis/karolispx/golang-rh-todo/1.0.0-oas3
+
+## About This Application
+1. GoLang application is hosted on **AWS EC2 Instance**.
+2. PostgreSQL database is hosted on **AWS RDS**.
+3. API documentation is currently hosted on **Swagger Hub** and can be used for making all API calls that are available in the application. More information contained in links below. 
+4. **docs** folder in the repository also contains HTML generated Swagger docs and Postman collection in JSON format.
+
 ***
 
 ## Features & Endpoints
+**Complete Swagger Documentation:**
+
+
 ### [User Authentication](https://github.com/karolispx/golang-rh-todo/wiki/3.-User-Authentication)
 1. [Registration](https://github.com/karolispx/golang-rh-todo/wiki/3.-User-Authentication#1-registration)
 2. [Login](https://github.com/karolispx/golang-rh-todo/wiki/3.-User-Authentication#2-login)
