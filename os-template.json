@@ -2,7 +2,7 @@
   "kind": "Template",
   "apiVersion": "v1",
   "metadata": {
-    "name": "GoLang RH TODO Application",
+    "name": "golangrhtodotemplate",
     "annotations": {
       "description": "GoLang RH Todo Application",
       "tags": "golang",
@@ -70,18 +70,18 @@
       "kind": "Service",
       "apiVersion": "v1",
       "metadata": {
-        "name": "golang-rh-todo",
+        "name": "rh-todo-app-go",
         "labels": {
-          "name": "golang-rh-todo"
+          "name": "rh-todo-app-go"
         }
       },
       "spec": {
         "selector": {
-          "name": "golang-rh-todo"
+          "name": "rh-todo-app-go"
         },
         "ports": [
           {
-            "name": "golang-rh-todo-port-secure",
+            "name": "rh-todo-app-go-port-secure",
             "port": "${{PORT}}",
             "targetPort": "${{PORT}}",
             "protocol": "TCP"
@@ -93,9 +93,9 @@
       "kind": "DeploymentConfig",
       "apiVersion": "v1",
       "metadata": {
-        "name": "golang-rh-todo",
+        "name": "rh-todo-app-go",
         "labels": {
-          "name": "golang-rh-todo"
+          "name": "rh-todo-app-go"
         }
       },
       "spec": {
@@ -106,18 +106,18 @@
         ],
         "replicas": 1,
         "selector": {
-          "name": "golang-rh-todo"
+          "name": "rh-todo-app-go"
         },
         "template": {
           "metadata": {
             "labels": {
-              "name": "golang-rh-todo"
+              "name": "rh-todo-app-go"
             }
           },
           "spec": {
             "containers": [
               {
-                "name": "golang-rh-todo",
+                "name": "rh-todo-app-go",
                 "image": "docker.io/karolispx/golang-rh-todo:latest",
                 "ports": [
                   {
