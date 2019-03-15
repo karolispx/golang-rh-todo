@@ -32,8 +32,8 @@ CREATE TABLE users (
     userid SERIAL PRIMARY KEY,
     email_address text NOT NULL,
     password text NOT NULL,
-    last_action text,
-    date_created text
+    last_action text NOT NULL,
+    date_created text NOT NULL
 );
 
 
@@ -41,8 +41,8 @@ CREATE TABLE tasks (
     taskid SERIAL PRIMARY KEY,
     userid integer NOT NULL,    
     task text NOT NULL,
-    watching character,
-    date_created text,
-    date_updated text
+    watching text NOT NULL,
+    date_created text NOT NULL,
+    date_updated text NOT NULL
 );
 ```
