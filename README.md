@@ -17,10 +17,32 @@ https://app.swaggerhub.com/apis/karolispx/golang-rh-todo/1.0.0
 6. [Delete a specific task](https://github.com/karolispx/golang-rh-todo/wiki/4.-Tasks#6-delete-a-specific-task)
 7. [Watch a specific task](https://github.com/karolispx/golang-rh-todo/wiki/4.-Tasks#7-watch-a-specific-task)
 8. [Unwatch a specific task](https://github.com/karolispx/golang-rh-todo/wiki/4.-Tasks#8-unwatch-a-specific-task)
+
 ***
+
 ## Project Setup
 * [Project Setup Locally](https://github.com/karolispx/golang-rh-todo/wiki/4.-Project-Setup-Locally)
 * [Project Setup On A Server](https://github.com/karolispx/golang-rh-todo/wiki/5.-Project-Setup-On-A-Server)
 
+***
+
+## Database Tables
+```
+CREATE TABLE users (
+    userid SERIAL PRIMARY KEY,
+    email_address text NOT NULL,
+    password text NOT NULL,
+    last_action text,
+    date_created text
+);
 
 
+CREATE TABLE tasks (
+    taskid SERIAL PRIMARY KEY,
+    userid integer NOT NULL,    
+    task text NOT NULL,
+    watching character,
+    date_created text,
+    date_updated text
+);
+```
