@@ -21,8 +21,8 @@ https://app.swaggerhub.com/apis/karolispx/golang-rh-todo/1.0.0
 ***
 
 ## Project Setup
-* [Project Setup Locally](https://github.com/karolispx/golang-rh-todo/wiki/4.-Project-Setup-Locally)
-* [Project Setup On A Server](https://github.com/karolispx/golang-rh-todo/wiki/5.-Project-Setup-On-A-Server)
+* [Project Setup Locally](https://github.com/karolispx/golang-rh-todo/wiki/1.-Project-Setup-Locally)
+* [Project Setup On A Server](https://github.com/karolispx/golang-rh-todo/wiki/2.-Project-Setup-On-A-Server)
 
 ***
 
