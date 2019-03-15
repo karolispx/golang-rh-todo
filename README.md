@@ -2,6 +2,7 @@
 ***
 ## Complete Swagger Documentation
 https://app.swaggerhub.com/apis/karolispx/golang-rh-todo/1.0.0
+***
 
 ## Features & Endpoints
 ### [User Authentication](https://github.com/karolispx/golang-rh-todo/wiki/3.-User-Authentication)
