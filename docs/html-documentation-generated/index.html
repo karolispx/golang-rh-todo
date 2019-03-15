@@ -1,0 +1,671 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Simple TODO App API</title>
+    <style type="text/css">
+      body {
+      	font-family: Trebuchet MS, sans-serif;
+      	font-size: 15px;
+      	color: #444;
+      	margin-right: 24px;
+      }
+      
+      h1	{
+      	font-size: 25px;
+      }
+      h2	{
+      	font-size: 20px;
+      }
+      h3	{
+      	font-size: 16px;
+      	font-weight: bold;
+      }
+      hr	{
+      	height: 1px;
+      	border: 0;
+      	color: #ddd;
+      	background-color: #ddd;
+      }
+      
+      .app-desc {
+        clear: both;
+        margin-left: 20px;
+      }
+      .param-name {
+        width: 100%;
+      }
+      .license-info {
+        margin-left: 20px;
+      }
+      
+      .license-url {
+        margin-left: 20px;
+      }
+      
+      .model {
+        margin: 0 0 0px 20px;
+      }
+      
+      .method {
+        margin-left: 20px;
+      }
+      
+      .method-notes	{
+      	margin: 10px 0 20px 0;
+      	font-size: 90%;
+      	color: #555;
+      }
+      
+      pre {
+        padding: 10px;
+        margin-bottom: 2px;
+      }
+      
+      .http-method {
+       text-transform: uppercase;
+      }
+      
+      pre.get {
+        background-color: #0f6ab4;
+      }
+      
+      pre.post {
+        background-color: #10a54a;
+      }
+      
+      pre.put {
+        background-color: #c5862b;
+      }
+      
+      pre.delete {
+        background-color: #a41e22;
+      }
+      
+      .huge	{
+      	color: #fff;
+      }
+      
+      pre.example {
+        background-color: #f3f3f3;
+        padding: 10px;
+        border: 1px solid #ddd;
+      }
+      
+      code {
+        white-space: pre;
+      }
+      
+      .nickname {
+        font-weight: bold;
+      }
+      
+      .method-path {
+        font-size: 1.5em;
+        background-color: #0f6ab4;
+      }
+      
+      .up {
+        float:right;
+      }
+      
+      .parameter {
+        width: 500px;
+      }
+      
+      .param {
+        width: 500px;
+        padding: 10px 0 0 20px;
+        font-weight: bold;
+      }
+      
+      .param-desc {
+        width: 700px;
+        padding: 0 0 0 20px;
+        color: #777;
+      }
+      
+      .param-type {
+        font-style: italic;
+      }
+      
+      .param-enum-header {
+      width: 700px;
+      padding: 0 0 0 60px;
+      color: #777;
+      font-weight: bold;
+      }
+      
+      .param-enum {
+      width: 700px;
+      padding: 0 0 0 80px;
+      color: #777;
+      font-style: italic;
+      }
+      
+      .field-label {
+        padding: 0;
+        margin: 0;
+        clear: both;
+      }
+      
+      .field-items	{
+      	padding: 0 0 15px 0;
+      	margin-bottom: 15px;
+      }
+      
+      .return-type {
+        clear: both;
+        padding-bottom: 10px;
+      }
+      
+      .param-header {
+        font-weight: bold;
+      }
+      
+      .method-tags {
+        text-align: right;
+      }
+      
+      .method-tag {
+        background: none repeat scroll 0% 0% #24A600;
+        border-radius: 3px;
+        padding: 2px 10px;
+        margin: 2px;
+        color: #FFF;
+        display: inline-block;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+  <h1>Simple TODO App API</h1>
+    <div class="app-desc">Simple TODO App API</div>
+    <div class="app-desc">More information: <a href="https://helloreverb.com">https://helloreverb.com</a></div>
+    <div class="app-desc">Contact Info: <a href="k.pliauskys@gmail.com">k.pliauskys@gmail.com</a></div>
+    <div class="app-desc">Version: 1.0.0-oas3</div>
+    <div class="app-desc">BasePath:/api/v1</div>
+    <div class="license-info">All rights reserved</div>
+    <div class="license-url">http://apache.org/licenses/LICENSE-2.0.html</div>
+  <h2>Access</h2>
+    <ol>
+      <li></li>
+    </ol>
+
+  <h2><a name="__Methods">Methods</a></h2>
+  [ Jump to <a href="#__Models">Models</a> ]
+
+  <h3>Table of Contents </h3>
+  <div class="method-summary"></div>
+  <h4><a href="#Authentication">Authentication</a></h4>
+  <ul>
+  <li><a href="#authLoginPost"><code><span class="http-method">post</span> /auth/login</code></a></li>
+  <li><a href="#authRegisterPost"><code><span class="http-method">post</span> /auth/register</code></a></li>
+  </ul>
+  <h4><a href="#Tasks">Tasks</a></h4>
+  <ul>
+  <li><a href="#tasksDelete"><code><span class="http-method">delete</span> /tasks</code></a></li>
+  <li><a href="#tasksGet"><code><span class="http-method">get</span> /tasks</code></a></li>
+  <li><a href="#tasksPost"><code><span class="http-method">post</span> /tasks</code></a></li>
+  <li><a href="#tasksTaskidDelete"><code><span class="http-method">delete</span> /tasks/{taskid}</code></a></li>
+  <li><a href="#tasksTaskidGet"><code><span class="http-method">get</span> /tasks/{taskid}</code></a></li>
+  <li><a href="#tasksTaskidPut"><code><span class="http-method">put</span> /tasks/{taskid}</code></a></li>
+  <li><a href="#tasksUnwatchTaskidPut"><code><span class="http-method">put</span> /tasks/unwatch/{taskid}</code></a></li>
+  <li><a href="#tasksWatchTaskidPut"><code><span class="http-method">put</span> /tasks/watch/{taskid}</code></a></li>
+  </ul>
+
+  <h1><a name="Authentication">Authentication</a></h1>
+  <div class="method"><a name="authLoginPost"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /auth/login</code></pre></div>
+    <div class="method-summary">User login. (<span class="nickname">authLoginPost</span>)</div>
+    <div class="method-notes">Process user login.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#UserLoginPayload">UserLoginPayload</a> (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Logged in successfully
+        <a href="#"></a>
+    <h4 class="field-label">403</h4>
+    User does not exist
+        <a href="#"></a>
+    <h4 class="field-label">422</h4>
+    Bad details, bad payload, missing details
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Server error
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="authRegisterPost"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /auth/register</code></pre></div>
+    <div class="method-summary">User registration. (<span class="nickname">authRegisterPost</span>)</div>
+    <div class="method-notes">Process user registration.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#UserRegisterPayload">UserRegisterPayload</a> (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Registered successfully
+        <a href="#"></a>
+    <h4 class="field-label">422</h4>
+    Bad details, bad payload, missing details
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Server error
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <h1><a name="Tasks">Tasks</a></h1>
+  <div class="method"><a name="tasksDelete"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /tasks</code></pre></div>
+    <div class="method-summary">Delete all user tasks. (<span class="nickname">tasksDelete</span>)</div>
+    <div class="method-notes">Delete all user tasks by user ID.</div>
+
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Tasks deleted
+        <a href="#"></a>
+    <h4 class="field-label">403</h4>
+    Not authorized to access this area
+        <a href="#"></a>
+    <h4 class="field-label">422</h4>
+    Bad details, bad payload, missing details, cooldown period
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Server error
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="tasksGet"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /tasks</code></pre></div>
+    <div class="method-summary">Get user tasks. (<span class="nickname">tasksGet</span>)</div>
+    <div class="method-notes">Get user tasks by query parameters.</div>
+
+
+
+
+
+    <h3 class="field-label">Query parameters</h3>
+    <div class="field-items">
+      <div class="param">watching (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Bring back all tasks that are being watched or not watched. Default null (will bring back all), available: yes, no. </div>      <div class="param">limit (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; The numbers of items to return, default 10. </div>      <div class="param">offset (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; The numbers of items to skip from the beginning,  default 0. </div>      <div class="param">orderby (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Order results by, default taskid, available: taskid, task, date_created, date_updated. </div>      <div class="param">order (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Query Parameter</span> &mdash; Order results coming back in, default desc, available: asc, desc. </div>    </div>  <!-- field-items -->
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Tasks returned
+        <a href="#"></a>
+    <h4 class="field-label">403</h4>
+    Not authorized to access this area
+        <a href="#"></a>
+    <h4 class="field-label">422</h4>
+    Bad details, bad payload, missing details, cooldown period
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Server error
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="tasksPost"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /tasks</code></pre></div>
+    <div class="method-summary">Create user task. (<span class="nickname">tasksPost</span>)</div>
+    <div class="method-notes">Create user task with task details.</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#CreateTaskPayload">CreateTaskPayload</a> (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Task created successfully
+        <a href="#"></a>
+    <h4 class="field-label">403</h4>
+    Not authorized to access this area
+        <a href="#"></a>
+    <h4 class="field-label">422</h4>
+    Bad details, bad payload, missing details, cooldown period
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Server error
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="tasksTaskidDelete"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /tasks/{taskid}</code></pre></div>
+    <div class="method-summary">Delete a specific task. (<span class="nickname">tasksTaskidDelete</span>)</div>
+    <div class="method-notes">Delete a specific task by task ID.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">taskid (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The ID of the task. </div>    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Task deleted
+        <a href="#"></a>
+    <h4 class="field-label">403</h4>
+    Not authorized to access this area
+        <a href="#"></a>
+    <h4 class="field-label">422</h4>
+    Bad details, bad payload, missing details, user does not own the task, cooldown period
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Server error
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="tasksTaskidGet"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /tasks/{taskid}</code></pre></div>
+    <div class="method-summary">Get a specific task. (<span class="nickname">tasksTaskidGet</span>)</div>
+    <div class="method-notes">Get a specific task by task ID.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">taskid (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The ID of the task. </div>    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Task returned
+        <a href="#"></a>
+    <h4 class="field-label">403</h4>
+    Not authorized to access this area
+        <a href="#"></a>
+    <h4 class="field-label">422</h4>
+    Bad details, bad payload, missing details, user does not own the task, cooldown period
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Server error
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="tasksTaskidPut"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /tasks/{taskid}</code></pre></div>
+    <div class="method-summary">Update a specific task. (<span class="nickname">tasksTaskidPut</span>)</div>
+    <div class="method-notes">Update a specific task by task ID.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">taskid (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The ID of the task. </div>    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#UpdateTaskPayload">UpdateTaskPayload</a> (optional)</div>
+      
+            <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Task updated
+        <a href="#"></a>
+    <h4 class="field-label">403</h4>
+    Not authorized to access this area
+        <a href="#"></a>
+    <h4 class="field-label">422</h4>
+    Bad details, bad payload, missing details, user does not own the task, cooldown period
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Server error
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="tasksUnwatchTaskidPut"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /tasks/unwatch/{taskid}</code></pre></div>
+    <div class="method-summary">Unwatch a specific task. (<span class="nickname">tasksUnwatchTaskidPut</span>)</div>
+    <div class="method-notes">Unwatch a specific task by task ID.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">taskid (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The ID of the task. </div>    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Task has been unwatched
+        <a href="#"></a>
+    <h4 class="field-label">403</h4>
+    Not authorized to access this area
+        <a href="#"></a>
+    <h4 class="field-label">422</h4>
+    Bad details, bad payload, missing details, not watching, user does not own the task, cooldown period
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Server error
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="tasksWatchTaskidPut"></a>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /tasks/watch/{taskid}</code></pre></div>
+    <div class="method-summary">Watch a specific task. (<span class="nickname">tasksWatchTaskidPut</span>)</div>
+    <div class="method-notes">Watch a specific task by task ID.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">taskid (required)</div>
+      
+            <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; The ID of the task. </div>    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Task has been watched
+        <a href="#"></a>
+    <h4 class="field-label">403</h4>
+    Not authorized to access this area
+        <a href="#"></a>
+    <h4 class="field-label">422</h4>
+    Bad details, bad payload, missing details, already watching, user does not own the task, cooldown period
+        <a href="#"></a>
+    <h4 class="field-label">500</h4>
+    Server error
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+
+  <h2><a name="__Models">Models</a></h2>
+  [ Jump to <a href="#__Methods">Methods</a> ]
+
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#CreateTaskPayload"><code>CreateTaskPayload</code></a></li>
+    <li><a href="#UpdateTaskPayload"><code>UpdateTaskPayload</code></a></li>
+    <li><a href="#UserLoginPayload"><code>UserLoginPayload</code></a></li>
+    <li><a href="#UserRegisterPayload"><code>UserRegisterPayload</code></a></li>
+  </ol>
+
+  <div class="model">
+    <h3><a name="CreateTaskPayload"><code>CreateTaskPayload</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">task </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="UpdateTaskPayload"><code>UpdateTaskPayload</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">task </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="UserLoginPayload"><code>UserLoginPayload</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">email </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">password </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="UserRegisterPayload"><code>UserRegisterPayload</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">email </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">password </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">password2 </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  </body>
+</html>
