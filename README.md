@@ -10,6 +10,7 @@
 4. VueJS application has been built to be used with this application. VueJS application is currently hosted on AWS S3 bucket and can be viewed here: http://vue-rh-todo.s3-website-eu-west-1.amazonaws.com
     - Codebase can be found here: https://github.com/karolispx/vue-rh-todo
     - **This VueJS application has been put together very quickly, it's nowhere near being good enough to be used in production. **
+
 ---
 
 ## Application's Structure:
@@ -59,3 +60,13 @@ CREATE TABLE tasks (
     date_updated text NOT NULL
 );
 ```
+
+---
+
+## Future Plans
+
+1. Automate build and deployment to both **Openshift** and **AWS EC2 Instance** by possibly using a combination of **bash scripts** and **Jenkins** or **GOCD**.
+2. Automate database table creation.
+3. Error logging or some sort of monitoring to get notifications if something goes wrong.
+4. JWT validation - what to do with previously user generated tokens that haven't expired yet but are valid?
+5. User email validation/password reset - possibly use **Mailgun** or **Mandrill** or **Sparkpost** for sending emails.
