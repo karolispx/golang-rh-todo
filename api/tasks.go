@@ -22,15 +22,6 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 
 		defer DB.Close()
 
-		// User cooldown period - antispam.
-		userNeedsCooldown := models.UserNeedsCooldown(DB, userID)
-
-		if userNeedsCooldown == true {
-			helpers.RestAPIRespond(w, r, "Please slow down. You have been making too many requests.", "", "error", 422)
-
-			return
-		}
-
 		// Pagination/filtering/sorting/search
 		// Default query parameters
 		tasksQueryParameters := models.TasksQueryParameters{
@@ -127,15 +118,6 @@ func GetTask(w http.ResponseWriter, r *http.Request) {
 	// If user is authenticated, get user task.
 	if userID > 0 {
 		DB := helpers.InitDB()
-
-		// User cooldown period - antispam.
-		userNeedsCooldown := models.UserNeedsCooldown(DB, userID)
-
-		if userNeedsCooldown == true {
-			helpers.RestAPIRespond(w, r, "Please slow down. You have been making too many requests.", "", "error", 422)
-
-			return
-		}
 
 		vars := mux.Vars(r)
 		taskid := vars["taskid"]
