@@ -127,8 +127,8 @@ func UserNeedsCooldown(DB *sql.DB, userID int) bool {
 		lastActionTime, err := time.Parse("2006.01.02 15:04:05", lastAction)
 
 		if err == nil {
-			// 5 seconds antispam protection
-			cooldownTime := lastActionTime.Add(5 * time.Second)
+			// 3 seconds antispam protection
+			cooldownTime := lastActionTime.Add(3 * time.Second)
 			currentTime := time.Now()
 
 			// timeLeft := currentTime.Sub(lastActionTime)
