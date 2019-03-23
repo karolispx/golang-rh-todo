@@ -35,7 +35,7 @@
 ## Installation:
 
 - [Local Environment](https://github.com/karolispx/golang-rh-todo/wiki/Installation:-Local-Environment)
-- [Openshift](https://github.com/karolispx/golang-rh-todo/wiki/Installation:-Openshift) - including **Jenkins** pipeline. 
+- [Openshift](https://github.com/karolispx/golang-rh-todo/wiki/Installation:-Openshift) - [Jenkins and Openshift](https://github.com/karolispx/golang-rh-todo/wiki/Jenkins-and-Openshift). 
 - [EC2 Instance](https://github.com/karolispx/golang-rh-todo/wiki/Installation:-EC2-Instance)
 
 ---
