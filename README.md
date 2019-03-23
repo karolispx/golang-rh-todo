@@ -35,7 +35,7 @@
 ## Installation:
 
 - [Local Environment](https://github.com/karolispx/golang-rh-todo/wiki/Installation:-Local-Environment)
-- [Openshift](https://github.com/karolispx/golang-rh-todo/wiki/Installation:-Openshift)
+- [Openshift](https://github.com/karolispx/golang-rh-todo/wiki/Installation:-Openshift) - Including **Jenkins** pipeline. 
 - [EC2 Instance](https://github.com/karolispx/golang-rh-todo/wiki/Installation:-EC2-Instance)
 
 ---
@@ -65,7 +65,7 @@ CREATE TABLE tasks (
 
 ## Future Plans
 
-1. Automate build and deployment to both **Openshift** and **AWS EC2 Instance** by possibly using a combination of **bash scripts** and **Jenkins** or **GOCD**.
+1. Automate build and deployment to both **Openshift** and **AWS EC2 Instance** by possibly using a combination of **bash scripts** and **Jenkins** or **GOCD** - Jenkins has been used to automate the deployment to Openshift.
 2. Automate database table creation.
 3. Error logging or some sort of monitoring to get notifications if something goes wrong.
 4. JWT validation - what to do with previously user generated tokens that haven't expired yet but are valid?
